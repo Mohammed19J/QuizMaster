@@ -1,11 +1,22 @@
-import MainLayout from "./layouts/MainLayout";
+import { Routes, Route } from "react-router-dom";
+import LoginLayout from "./layouts/LoginLayout";
+import Dashboard from "./layouts/DashboardLayout";
+import ProtectedRoute from "./components/ProtectedRoute";
 
-export function App() {
-  return (
-    <MainLayout>
-      <h1 class="text-2xl">Hello World</h1>
-      <div>temp content</div>
-    </MainLayout>
+const App = () => {
+    return (
+        <Routes>
+            <Route path="/" element={<LoginLayout />} />
+            <Route
+                path="/dashboard"
+                element={
+                    <ProtectedRoute>
+                        <Dashboard />
+                    </ProtectedRoute>
+                }
+            />
+        </Routes>
+    );
+};
 
-  );
-}
+export default App;

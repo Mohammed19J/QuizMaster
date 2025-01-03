@@ -1,7 +1,0 @@
-export default function Footer() {
-    return (
-        <div class="bg-green-700 text-white p-4">
-            <div class="max-w-[1000px] mx-auto">temp for Footer</div>
-        </div>
-    );
-}
