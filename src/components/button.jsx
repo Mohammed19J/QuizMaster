@@ -1,10 +1,8 @@
-import { h } from "preact";
-
-const Button = ({ text, onClick, className = "" }) => {
+const Button = ({ text, onClick, color, className = "" }) => {
     return (
         <button
             onClick={onClick}
-            className={`text-blue-600 hover:text-blue-800 px-4 py-2 text-base transition-colors duration-200 ${className}`}
+            className={`text-white bg-${color}-500 hover:bg-${color}-600 px-4 py-2 rounded transition-colors duration-200 ${className}`}
         >
             {text}
         </button>

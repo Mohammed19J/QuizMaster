@@ -92,7 +92,7 @@ const QuizHistory = ({ onQuizSelect }) => {
                             <div className="mt-4 flex justify-between items-center">
                                 <button
                                     onClick={() => onQuizSelect(quiz)}
-                                    className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition-all duration-200"
+                                    className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600 transition-all duration-200"
                                 >
                                     Edit
                                 </button>
