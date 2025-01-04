@@ -9,6 +9,7 @@ const QuizHistory = ({ onQuizSelect }) => {
     const [quizHistory, setQuizHistory] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [copiedQuizId, setCopiedQuizId] = useState(null);
 
     useEffect(() => {
         if (!user?.uid) return;
@@ -26,7 +27,7 @@ const QuizHistory = ({ onQuizSelect }) => {
                             quizId,
                             ...data,
                         }))
-                        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt)); // Sort quizzes by creation date
+                        .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
                     setQuizHistory(formattedQuizzes);
                 } else {
                     setQuizHistory([]);
@@ -42,7 +43,19 @@ const QuizHistory = ({ onQuizSelect }) => {
         fetchQuizHistory();
     }, [user?.uid]);
 
-    if (!user) return <pc className="text-center">Please log in to view your quiz history.</pc>;
+    const handleCopyLink = (quizId) => {
+        const url = `${window.location.origin}/quiz/${quizId}`;
+        navigator.clipboard.writeText(url)
+            .then(() => {
+                setCopiedQuizId(quizId);
+                setTimeout(() => setCopiedQuizId(null), 2000); // Reset "Copied!" message after 2 seconds
+            })
+            .catch((err) => {
+                console.error("Failed to copy link:", err);
+            });
+    };
+
+    if (!user) return <p className="text-center">Please log in to view your quiz history.</p>;
     if (loading) return <p className="text-gray-600 dark:text-gray-300 text-center">Loading quiz history...</p>;
     if (error) return <p className="text-red-500 text-center">{error}</p>;
 
@@ -60,8 +73,7 @@ const QuizHistory = ({ onQuizSelect }) => {
                     {quizHistory.map((quiz) => (
                         <div
                             key={quiz.quizId}
-                            onClick={() => onQuizSelect(quiz)}
-                            className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg cursor-pointer transition-all duration-200 border border-gray-200 dark:border-gray-700"
+                            className="p-6 bg-white dark:bg-gray-800 rounded-lg shadow-md hover:shadow-lg transition-all duration-200 border border-gray-200 dark:border-gray-700"
                         >
                             <h3 className="text-xl font-bold text-blue-600 dark:text-blue-400 mb-2">
                                 {quiz.title || "Untitled Quiz"}
@@ -77,10 +89,23 @@ const QuizHistory = ({ onQuizSelect }) => {
                                     Responses: {quiz.responses || 0}
                                 </p>
                             </div>
-                            <div className="mt-4 text-right">
-                                <span className="text-blue-500 dark:text-blue-400 text-sm">
-                                    Click to edit →
-                                </span>
+                            <div className="mt-4 flex justify-between items-center">
+                                <button
+                                    onClick={() => onQuizSelect(quiz)}
+                                    className="px-4 py-2 bg-purple-500 text-white rounded hover:bg-purple-600 transition-all duration-200"
+                                >
+                                    Edit
+                                </button>
+                                <button
+                                    onClick={() => handleCopyLink(quiz.quizId)}
+                                    className={`px-4 py-2 rounded text-white font-semibold transition-all duration-200 ${
+                                        copiedQuizId === quiz.quizId
+                                            ? "bg-green-500 hover:bg-green-600"
+                                            : "bg-blue-600 hover:bg-blue-700 dark:bg-blue-500 dark:hover:bg-blue-600"
+                                    }`}
+                                >
+                                    {copiedQuizId === quiz.quizId ? "Copied!" : "Copy Link"}
+                                </button>
                             </div>
                         </div>
                     ))}
