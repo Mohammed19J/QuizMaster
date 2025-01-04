@@ -225,7 +225,7 @@ const DashboardContent = () => {
                     <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4 text-center">
                         Most Popular Quizzes
                     </h3>
-                    <div className="relative w-full h-64">
+                    <div className="relative w-full h-48 sm:h-64 lg:h-96">
                         {mostSubmittedQuizzes && Object.keys(mostSubmittedQuizzes).length > 0 ? (
                             <canvas id="mostSubmittedChart"></canvas>
                         ) : (

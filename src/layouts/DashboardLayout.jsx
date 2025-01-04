@@ -29,28 +29,29 @@ const DashboardLayout = ({ className = "" }) => {
     };
 
     return (
-        <div className={`min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white ${className}`}>
+        <div className={"h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white overflow-y-auto ${className}"}>
+            {/* Header Section */}
             <Header 
                 activeTab={activeTab} 
                 onTabChange={setActiveTab}
                 className="border-b border-gray-200 dark:border-gray-700"
             />
             
-            <div className="container mx-auto px-4 py-4 flex flex-col items-center">
-                <div className="flex items-center space-x-4">
-                    <ProfileImage
-                        src={profileImage}
-                        alt={`${username}'s profile`}
-                        size="60px"
-                        name={username} // Pass the username to extract the initial
-                    />
-                    <h1 className="text-3xl font-bold text-blue-600 dark:text-blue-400">
-                        Welcome, {username}!
-                    </h1>
-                </div>
+            {/* Welcome Section */}
+            <div className="container mx-auto px-4 py-4 flex flex-col items-center text-center">
+                <ProfileImage
+                    src={profileImage}
+                    alt={`${username}'s profile`}
+                    size="60px"
+                    name={username} // Pass the username to extract the initial
+                />
+                <h1 className="text-3xl font-bold text-blue-600 dark:text-blue-400 mt-4">
+                    Welcome, {username}!
+                </h1>
             </div>
 
-            <main className="container mx-auto px-4 py-8">
+            {/* Main Content Section */}
+            <main className="container mx-auto px-2 sm:px-4 py-8">
                 {renderContent()}
             </main>
         </div>
