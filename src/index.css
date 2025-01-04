@@ -3,12 +3,12 @@
 @tailwind utilities;
 
 body {
-    background-color: white;
-    color: black;
-    transition: background-color 0.3s, color 0.3s; /* Smooth transition */
+  background-color: white;
+  color: black;
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition */
 }
 
 body.dark {
-    background-color: black;
-    color: white;
+  background-color: black;
+  color: white;
 }

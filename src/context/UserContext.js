@@ -8,8 +8,15 @@ const UserContext = createContext();
 export const UserProvider = ({ children }) => {
     const [user, setUser] = useState(null);
 
+    const logout = () => {
+        // Clear the user state
+        setUser(null);
+        // Clear local storage or cookies if needed
+        localStorage.removeItem("user");
+    };
+
     return (
-        <UserContext.Provider value={{ user, setUser }}>
+        <UserContext.Provider value={{ user, setUser, logout }}>
             {children}
         </UserContext.Provider>
     );

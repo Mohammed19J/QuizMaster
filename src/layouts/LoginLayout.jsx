@@ -5,9 +5,10 @@ import WelcomeMessage from "../components/WelcomeMessage";
 import GoogleLoginButton from "../components/GoogleLoginButton";
 import LoginBox from "../components/LoginBox";
 import { signInWithPopup } from "firebase/auth";
-import { auth, googleProvider } from "../firebase/firebase";
+import { auth, googleProvider, database} from "../firebase/firebase";
 import { useUser } from "../context/UserContext";
 import LightSwitch from "../components/light_switch_header";
+import { ref, get, set } from "firebase/database";
 
 const LoginLayout = () => {
     const { setUser } = useUser();
@@ -15,39 +16,58 @@ const LoginLayout = () => {
     const [errorMessage, setErrorMessage] = useState(null);
     const [isLoading, setIsLoading] = useState(false);
 
-    const handleLogin = () => {
-        setErrorMessage(null); // Clear any previous error messages
-        setIsLoading(true); // Set loading state to true
+    const handleLogin = async () => {
+        setErrorMessage(null);
+        setIsLoading(true);
     
-        // Trigger Google sign-in with popup
-        signInWithPopup(auth, googleProvider)
-            .then((result) => {
-                if (result.user) {
-                    // If login is successful, set the user and navigate to the dashboard
-                    setUser(result.user);
-                    navigate("/dashboard");
-                } else {
-                    // Handle rare case where no user data is returned
-                    throw new Error("Login failed - no user data received");
-                }
-            })
-            .catch((error) => {
-                let message;
-                switch (error.code) {
-                    case "auth/popup-closed-by-user":
-                        message = "Login canceled - you closed the popup.";
-                        break;
-                    case "auth/popup-blocked":
-                        message = "Popup was blocked by your browser. Please allow popups and try again.";
-                        break;
-                    default:
-                        message = error.message || "An error occurred during login.";
-                }
-                setErrorMessage(message); // Set the error message immediately
-            })
-            .finally(() => {
-                setIsLoading(false); // Always clear the loading state
-            });
+        try {
+            const result = await signInWithPopup(auth, googleProvider);
+    
+            const user = result.user;
+    
+            // Save user to global context
+            setUser(user);
+    
+            // Check if the user exists in the Realtime Database
+            const userRef = ref(database, `users/${user.uid}`);
+            const snapshot = await get(userRef);
+    
+            if (!snapshot.exists()) {
+                // If the user doesn't exist, create a new record
+                await set(userRef, {
+                    email: user.email,
+                    displayName: user.displayName || "Anonymous",
+                    photoURL: user.photoURL || "",
+                    quizzesCreated: 0, // Initialize to 0
+                    quizHistory: {}, // Empty object for quiz data
+                    mostSubmittedQuizzes: {}, // Empty object for stats
+                    participantResponses: {}, // Empty object for responses
+                });
+    
+            } else {
+                // If the user exists, retrieve their data
+                const userData = snapshot.val();
+                // Optionally, you can save this data in your global state
+            }
+    
+            // Redirect to the dashboard
+            navigate("/dashboard");
+        } catch (error) {
+            let message;
+            switch (error.code) {
+                case "auth/popup-closed-by-user":
+                    message = "Login canceled - you closed the popup.";
+                    break;
+                case "auth/popup-blocked":
+                    message = "Popup was blocked by your browser. Please allow popups and try again.";
+                    break;
+                default:
+                    message = error.message || "An error occurred during login.";
+            }
+            setErrorMessage(message);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const closeErrorPopup = () => {
