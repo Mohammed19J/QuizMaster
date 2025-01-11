@@ -9,11 +9,7 @@ const DashboardContent = () => {
     const { user } = useUser();
     const [mostSubmittedQuizzes, setMostSubmittedQuizzes] = useState({});
     const [totalQuizzes, setTotalQuizzes] = useState(0);
-
-    // Track Chart.js instance so we can destroy & re-init
     const [chartInstance, setChartInstance] = useState(null);
-
-    // Track current dark mode so we can rebuild the chart with correct colors
     const [isDark, setIsDark] = useState(
         document.documentElement.classList.contains("dark")
     );
@@ -54,7 +50,6 @@ const DashboardContent = () => {
         fetchTotalQuizzes();
     }, [user?.uid]);
 
-    // Listen for "theme-changed" event from LightSwitch
     useEffect(() => {
         const handleThemeChange = () => {
             setIsDark(document.documentElement.classList.contains("dark"));
@@ -66,21 +61,19 @@ const DashboardContent = () => {
         };
     }, []);
 
-    /**
-     * Creates or re-creates the Chart.js instance with current theme colors.
-     */
     const updateChart = () => {
         if (!mostSubmittedQuizzes || Object.keys(mostSubmittedQuizzes).length === 0) {
-            // No submissions, do not render chart
             return;
         }
 
-        // Process the data to get the top 10
         const sortedQuizzes = Object.entries(mostSubmittedQuizzes)
             .sort(([, countA], [, countB]) => countB - countA)
             .slice(0, 10);
 
-        const top10Labels = sortedQuizzes.map(([quizName]) => quizName);
+        const top10Labels = sortedQuizzes.map(([quizName]) => {
+            // Truncate long quiz names for mobile display
+            return quizName.length > 15 ? quizName.substring(0, 12) + '...' : quizName;
+        });
         const top10Data = sortedQuizzes.map(([, count]) => count);
 
         const ctx = document
@@ -88,7 +81,6 @@ const DashboardContent = () => {
             ?.getContext("2d");
         if (!ctx) return;
 
-        // Theme-aware colors
         const themeColors = {
             light: {
                 backgroundColor: "rgba(59, 130, 246, 0.2)",
@@ -106,7 +98,6 @@ const DashboardContent = () => {
             },
         };
 
-        // Pick the color set based on dark/light
         const colors = isDark ? themeColors.dark : themeColors.light;
 
         const chartConfig = {
@@ -126,29 +117,39 @@ const DashboardContent = () => {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                layout: {
+                    padding: {
+                        left: 10,
+                        right: 10,
+                        top: 0,
+                        bottom: 0
+                    }
+                },
                 plugins: {
                     legend: {
+                        display: window.innerWidth > 768, // Only show legend on larger screens
                         labels: {
                             color: colors.textColor,
                             font: {
-                                size: 12,
+                                size: window.innerWidth < 768 ? 10 : 12,
                             },
                         },
                     },
-                    title: {
-                        display: true,
-                        text: "",
-                        color: colors.textColor,
-                        font: {
-                            size: 16,
-                            weight: "bold",
-                        },
-                    },
+                    tooltip: {
+                        enabled: true,
+                        callbacks: {
+                            title: function(tooltipItems) {
+                                // Show full quiz name in tooltip
+                                const index = tooltipItems[0].dataIndex;
+                                return sortedQuizzes[index][0];
+                            }
+                        }
+                    }
                 },
                 scales: {
                     x: {
                         title: {
-                            display: true,
+                            display: window.innerWidth > 768,
                             text: "Quiz Name",
                             color: colors.axisLabelColor,
                             font: {
@@ -159,17 +160,18 @@ const DashboardContent = () => {
                         ticks: {
                             color: colors.textColor,
                             font: {
-                                size: 11,
+                                size: window.innerWidth < 768 ? 8 : 11,
                             },
+                            maxRotation: 45,
+                            minRotation: 45
                         },
                         grid: {
-                            color: colors.gridColor,
-                            drawBorder: false,
+                            display: false
                         },
                     },
                     y: {
                         title: {
-                            display: true,
+                            display: window.innerWidth > 768,
                             text: "Submissions",
                             color: colors.axisLabelColor,
                             font: {
@@ -180,7 +182,7 @@ const DashboardContent = () => {
                         ticks: {
                             color: colors.textColor,
                             font: {
-                                size: 11,
+                                size: window.innerWidth < 768 ? 8 : 11,
                             },
                         },
                         grid: {
@@ -192,26 +194,33 @@ const DashboardContent = () => {
             },
         };
 
-        // Destroy any existing chart to avoid duplicates
         if (chartInstance) {
             chartInstance.destroy();
         }
 
-        // Create a new chart with the updated config
         const newChart = new Chart(ctx, chartConfig);
         setChartInstance(newChart);
     };
 
-    // Rebuild chart whenever data changes OR dark mode changes
     useEffect(() => {
         updateChart();
+
+        // Add resize handler
+        const handleResize = () => {
+            updateChart();
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => {
+            window.removeEventListener('resize', handleResize);
+        };
     }, [mostSubmittedQuizzes, isDark]);
 
     return (
         <Fragment>
             <div className="container mx-auto px-4 py-8 space-y-8">
                 <div className="flex justify-center">
-                    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md text-center max-w-sm">
+                    <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md text-center w-full max-w-sm">
                         <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4">
                             Total Quizzes Created
                         </h3>
@@ -221,11 +230,11 @@ const DashboardContent = () => {
                     </div>
                 </div>
 
-                <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md">
+                <div className="bg-white dark:bg-gray-800 p-4 sm:p-6 rounded-lg shadow-md">
                     <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-4 text-center">
                         Most Popular Quizzes
                     </h3>
-                    <div className="relative w-full h-48 sm:h-64 lg:h-96">
+                    <div className="relative w-full h-64 sm:h-72 md:h-80 lg:h-96">
                         {mostSubmittedQuizzes && Object.keys(mostSubmittedQuizzes).length > 0 ? (
                             <canvas id="mostSubmittedChart"></canvas>
                         ) : (
