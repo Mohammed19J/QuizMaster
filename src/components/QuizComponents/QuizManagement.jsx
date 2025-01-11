@@ -1,3 +1,4 @@
+/** /src/components/QuizManagement.jsx **/
 import { h } from "preact";
 import { useState, useEffect } from "preact/hooks";
 import QuizHistory from "./QuizHistory";
@@ -8,7 +9,6 @@ const QuizManagement = ({ initialView = "creator" }) => {
     const [selectedQuiz, setSelectedQuiz] = useState(null);
 
     useEffect(() => {
-        // Ensure proper view initialization when `initialView` changes
         setView(initialView);
         if (initialView === "creator") {
             setSelectedQuiz(null);
@@ -16,26 +16,25 @@ const QuizManagement = ({ initialView = "creator" }) => {
     }, [initialView]);
 
     const handleQuizSelect = (quiz) => {
+        // When user clicks "Edit" in QuizHistory, we load that quiz
         setSelectedQuiz(quiz);
-        setView("creator"); // Switch to the QuizCreator view when a quiz is selected
+        setView("creator");
     };
 
     const handleClearSelection = () => {
         setSelectedQuiz(null);
-        setView("history"); // Switch back to QuizHistory view
+        setView("history");
     };
 
-    // Render QuizCreator for editing or creating quizzes
     if (view === "creator") {
         return (
             <QuizCreator
-                initialQuiz={selectedQuiz} // Pass selected quiz for editing
-                onClearSelection={selectedQuiz ? handleClearSelection : null} // Only provide back navigation for edits
+                initialQuiz={selectedQuiz}
+                onClearSelection={selectedQuiz ? handleClearSelection : null}
             />
         );
     }
 
-    // Render QuizHistory by default
     return <QuizHistory onQuizSelect={handleQuizSelect} />;
 };
 

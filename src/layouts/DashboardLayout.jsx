@@ -1,10 +1,10 @@
 import { h } from "preact";
 import { useState } from "preact/hooks";
-import Header from "../components/header";
-import QuizManagement from "../components/QuizManagement";
-import DashboardContent from "../components/DashboardContent";
-import QuizResponses from "../components/QuizResponses";
-import ProfileImage from "../components/ProfileImage";
+import Header from "../components/GeneralComponents/header";
+import QuizManagement from "../components/QuizComponents/QuizManagement";
+import DashboardContent from "../components/DashboardComponents/DashboardContent";
+import QuizResponses from "../components/ResponseComponents/QuizResponses";
+import ProfileImage from "../components/GeneralComponents/ProfileImage";
 import { useUser } from "../context/UserContext";
 
 const DashboardLayout = ({ className = "" }) => {

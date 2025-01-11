@@ -1,13 +1,13 @@
 import { h } from "preact";
 import { useState } from "preact/hooks";
 import { useNavigate } from "react-router-dom";
-import WelcomeMessage from "../components/WelcomeMessage";
-import GoogleLoginButton from "../components/GoogleLoginButton";
-import LoginBox from "../components/LoginBox";
+import WelcomeMessage from "../components/GeneralComponents/WelcomeMessage";
+import GoogleLoginButton from "../components/LoginComponents/GoogleLoginButton";
+import LoginBox from "../components/LoginComponents/LoginBox";
 import { signInWithPopup } from "firebase/auth";
 import { auth, googleProvider, database} from "../firebase/firebase";
 import { useUser } from "../context/UserContext";
-import LightSwitch from "../components/light_switch_header";
+import LightSwitch from "../components/GeneralComponents/light_switch_header";
 import { ref, get, set } from "firebase/database";
 
 const LoginLayout = () => {

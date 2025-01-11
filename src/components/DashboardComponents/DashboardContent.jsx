@@ -1,8 +1,8 @@
 import { h, Fragment } from "preact";
 import { useState, useEffect } from "preact/hooks";
 import { ref, get } from "firebase/database";
-import { database } from "../firebase/firebase";
-import { useUser } from "../context/UserContext";
+import { database } from "../../firebase/firebase";
+import { useUser } from "../../context/UserContext";
 import Chart from "chart.js/auto";
 
 const DashboardContent = () => {

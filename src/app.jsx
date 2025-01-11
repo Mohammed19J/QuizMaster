@@ -1,7 +1,8 @@
 import { Routes, Route } from "react-router-dom";
 import LoginLayout from "./layouts/LoginLayout";
 import Dashboard from "./layouts/DashboardLayout";
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./components/GeneralComponents/ProtectedRoute";
+import QuizLayout from "./layouts/QuizLayout";
 
 const App = () => {
     return (
@@ -15,6 +16,7 @@ const App = () => {
                     </ProtectedRoute>
                 }
             />
+            <Route path="/quiz/:quizId" element={<QuizLayout />} />
         </Routes>
     );
 };
