@@ -228,11 +228,11 @@ const QuizDisplay = () => {
     <div className="container mx-auto px-4 py-8 flex flex-col items-center bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 min-h-screen">
       <div className="w-full max-w-3xl">
         <LightSwitch className="absolute top-4 right-8" />
-        <div className="text-center mb-8">
+        <div className="text-center mb-8 mt-12 md:mt-8">
           <WelcomeMessage
             text="Welcome to QuizMaster"
             className="text-3xl text-blue-600 dark:text-blue-400 mb-4 font-bold"
-          />
+        />
           <h2 className="text-xl text-gray-700 dark:text-gray-300 font-semibold">
             {quiz?.title}
           </h2>
