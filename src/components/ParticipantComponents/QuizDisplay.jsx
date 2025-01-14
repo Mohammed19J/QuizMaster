@@ -225,7 +225,7 @@ const QuizDisplay = () => {
   const scorePercentage = totalPossibleScore > 0 ? (score / totalPossibleScore) * 100 : 0;
 
   return (
-    <div className="container mx-auto px-4 py-8 flex flex-col items-center bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 min-h-screen">
+    <div className="w-full h-screen flex flex-col items-center bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">
       <div className="w-full max-w-3xl">
         <LightSwitch className="absolute top-4 right-8" />
         <div className="text-center mb-8 mt-12 md:mt-8">
