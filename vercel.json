@@ -1,4 +1,3 @@
-/*Telling vercel to go to root before taking us to the quiz so it opens from anywhere*/
 {
     "rewrites": [
       { "source": "/quiz/:path*", "destination": "/" }
