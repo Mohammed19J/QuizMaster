@@ -1,3 +1,4 @@
+// Google login button component that will be rendered in the LoginLayout component
 const GoogleLoginButton = ({ onClick, className }) => {
   return (
       <button className={className} onClick={onClick}>

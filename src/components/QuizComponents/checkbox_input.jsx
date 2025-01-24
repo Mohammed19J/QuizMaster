@@ -1,5 +1,6 @@
 import { h } from "preact";
 
+// Checkbox input component for forms
 const CheckboxInput = ({
   label,
   checked,

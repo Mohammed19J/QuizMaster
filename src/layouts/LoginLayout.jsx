@@ -11,6 +11,7 @@ import LightSwitch from "../components/GeneralComponents/light_switch_header";
 import { ref, get, set } from "firebase/database";
 
 const LoginLayout = () => {
+    //Hooks
     const { setUser } = useUser();
     const navigate = useNavigate();
     const [errorMessage, setErrorMessage] = useState(null);
@@ -47,11 +48,11 @@ const LoginLayout = () => {
             } else {
                 // If the user exists, retrieve their data
                 const userData = snapshot.val();
-                // Optionally, you can save this data in your global state
             }
     
             // Redirect to the dashboard
             navigate("/dashboard");
+        //Print error message if an error occurs
         } catch (error) {
             let message;
             switch (error.code) {

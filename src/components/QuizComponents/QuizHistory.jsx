@@ -5,13 +5,19 @@ import { ref, get } from "firebase/database";
 import { database } from "../../firebase/firebase";
 import { useUser } from "../../context/UserContext";
 
+// QuizHistory component to display the user's quiz history
 const QuizHistory = ({ onQuizSelect }) => {
+    // Get the current user from the UserContext
     const { user } = useUser();
+    // State to store the user's quiz history
     const [quizHistory, setQuizHistory] = useState([]);
+    // State to store the loading status
     const [loading, setLoading] = useState(true);
+    // State to store any errors that occur during fetching the quiz history
     const [error, setError] = useState(null);
+    // State to store the quiz ID that was copied
     const [copiedQuizId, setCopiedQuizId] = useState(null);
-
+    // Fetch the user's quiz history when the component mounts
     useEffect(() => {
         if (!user?.uid) return;
 
@@ -43,7 +49,7 @@ const QuizHistory = ({ onQuizSelect }) => {
 
         fetchQuizHistory();
     }, [user?.uid]);
-
+    // Function to copy the quiz link to the clipboard
     const handleCopyLink = (quizId) => {
         const url = `${window.location.origin}/quiz/${quizId}`;
         navigator.clipboard.writeText(url)
@@ -55,9 +61,11 @@ const QuizHistory = ({ onQuizSelect }) => {
                 console.error("Failed to copy link:", err);
             });
     };
-
+    // If the user is not logged in, show a message to log in
     if (!user) return <p className="text-center">Please log in to view your quiz history.</p>;
+    // If the quiz history is loading, show a loading message
     if (loading) return <p className="text-gray-600 dark:text-gray-300 text-center">Loading quiz history...</p>;
+    // If there is an error fetching the quiz history, show an error message
     if (error) return <p className="text-red-500 text-center">{error}</p>;
 
     return (

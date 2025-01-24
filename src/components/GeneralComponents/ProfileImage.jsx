@@ -1,6 +1,7 @@
 import { h } from "preact";
 import { useState } from "preact/hooks";
 
+// ProfileImage component to display a user's profile image
 const ProfileImage = ({ src, alt, size = "50px", className = "", name = "" }) => {
     const [imageFailed, setImageFailed] = useState(false);
 
@@ -8,7 +9,7 @@ const ProfileImage = ({ src, alt, size = "50px", className = "", name = "" }) =>
     const initial = name ? name.charAt(0).toUpperCase() : "U";
 
     const handleImageError = () => {
-        // If the image fails to load, set the state to show the fallback initial
+        // If the image fails to load, set the state to show the fallback initial instead
         setImageFailed(true);
     };
 

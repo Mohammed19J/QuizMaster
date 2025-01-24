@@ -11,7 +11,7 @@ export const UserProvider = ({ children }) => {
     const logout = () => {
         // Clear the user state
         setUser(null);
-        // Clear local storage or cookies if needed
+        // Clear local storage or cookies
         localStorage.removeItem("user");
     };
 

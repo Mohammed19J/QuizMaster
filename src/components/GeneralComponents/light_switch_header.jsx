@@ -1,22 +1,22 @@
 import { h } from "preact";
 import { useState, useEffect } from "preact/hooks";
 
+// LightSwitch component to toggle dark mode on and off
 const LightSwitch = ({ className = "" }) => {
   const [isDark, setIsDark] = useState(false);
-
+  // Check if dark mode is enabled on page load
   useEffect(() => {
     const isDarkMode = document.documentElement.classList.contains("dark");
     setIsDark(isDarkMode);
   }, []);
-
+  // Toggle dark mode on button click
   const toggleTheme = () => {
     const newDarkMode = !isDark;
     setIsDark(newDarkMode);
 
     // Toggle dark mode on <html>
     document.documentElement.classList.toggle("dark", newDarkMode);
-
-    // (Optional) Toggle classes on <body> if you want
+    // Toggle dark mode on <body>
     if (newDarkMode) {
       document.body.classList.add("dark", "bg-gray-900", "text-white");
     } else {

@@ -6,13 +6,16 @@ import DashboardContent from "../components/DashboardComponents/DashboardContent
 import QuizResponses from "../components/ResponseComponents/QuizResponses";
 import ProfileImage from "../components/GeneralComponents/ProfileImage";
 import { useUser } from "../context/UserContext";
-
+//This is the dashboard layout that will be rendered when the user logs in
 const DashboardLayout = ({ className = "" }) => {
+    //Get the user data from the UserContext
     const { user } = useUser();
+    //Extract the username and profile image from the user
     const username = user?.displayName || "User";
-    const profileImage = user?.photoURL || ""; // This can be undefined or an empty string
+    const profileImage = user?.photoURL || "";
+    //Set the active tab to the dashboard
     const [activeTab, setActiveTab] = useState("dashboard");
-
+    //Render the content based on the active tab
     const renderContent = () => {
         switch (activeTab) {
             case "dashboard":
@@ -43,7 +46,7 @@ const DashboardLayout = ({ className = "" }) => {
                     src={profileImage}
                     alt={`${username}'s profile`}
                     size="60px"
-                    name={username} // Pass the username to extract the initial
+                    name={username} // Pass the username to extract the initial for image if no photo is provided
                 />
                 <h1 className="text-3xl font-bold text-blue-600 dark:text-blue-400 mt-4">
                     Welcome, {username}!

@@ -1,5 +1,6 @@
 import * as React from "react";
 
+// Input component
 const Input = React.forwardRef(({ className, type, ...props }, ref) => {
   return (
     <input

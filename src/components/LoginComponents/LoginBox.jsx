@@ -1,9 +1,10 @@
 import React from 'react';
 import { useState, useEffect } from 'react';
 
+// This component is a container for the login button
 const LoginBox = ({ children, className }) => {
     const [isVisible, setIsVisible] = useState(false);
-
+    // This useEffect hook is used to animate the login box when it is rendered
     useEffect(() => {
         setIsVisible(true);
     }, []);

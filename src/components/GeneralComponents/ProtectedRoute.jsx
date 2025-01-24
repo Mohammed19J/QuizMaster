@@ -2,6 +2,7 @@ import { h } from "preact";
 import { useUser } from "../../context/UserContext";
 import { Navigate } from "react-router-dom";
 
+// Custom component that checks if the user is authenticated
 const ProtectedRoute = ({ children }) => {
     const { user } = useUser();
 

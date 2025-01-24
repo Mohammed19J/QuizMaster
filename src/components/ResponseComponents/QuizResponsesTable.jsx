@@ -7,17 +7,19 @@ import { ref, get } from 'firebase/database';
 import { database } from '../../firebase/firebase';
 import ExcelJS from 'exceljs';
 
+// QuizResponsesTable component
 const QuizResponsesTable = ({ quizId, onBack }) => {
+  // State variables
   const [responses, setResponses] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [sortConfig, setSortConfig] = useState({ key: 'submittedAt', direction: 'desc' });
   const [calculatedMaxScore, setCalculatedMaxScore] = useState(0);
-
+  // Fetch quiz data & responses
   useEffect(() => {
     if (!quizId) return;
-
+    // Fetch quiz data & responses
     const fetchQuizData = async () => {
       try {
         setLoading(true);
@@ -25,7 +27,7 @@ const QuizResponsesTable = ({ quizId, onBack }) => {
         // Fetch quiz questions & compute max possible score
         const quizRef = ref(database, `quizzes/${quizId}`);
         const quizSnapshot = await get(quizRef);
-
+        // If quiz doesn't exist, set error and return
         if (quizSnapshot.exists()) {
           const quizData = quizSnapshot.val();
           setQuestions(quizData.questions || []);
@@ -66,7 +68,7 @@ const QuizResponsesTable = ({ quizId, onBack }) => {
 
     fetchQuizData();
   }, [quizId]);
-
+  // Helper function to get the value of a response option
   const getOptionValue = (question, responseValue) => {
     if (!responseValue) return "-";
   
@@ -107,7 +109,7 @@ const QuizResponsesTable = ({ quizId, onBack }) => {
     const matchedOption = question.options?.find(opt => opt.value === responseValue);
     return matchedOption ? matchedOption.value : responseValue;
   };
-
+  // Export responses to Excel
   const handleDownloadExcel = async () => {
     const workbook = new ExcelJS.Workbook();
     const worksheet = workbook.addWorksheet("Responses");
@@ -125,7 +127,7 @@ const QuizResponsesTable = ({ quizId, onBack }) => {
       const rowData = [
         ...questions.map(q => {
           const userAnswer = response.responses?.[q.id];
-          // Convert to plain text for Excel (no bullet points in Excel)
+          // Convert to plain text for Excel
           if (q.questionType === 'checkboxes' && Array.isArray(userAnswer)) {
             return userAnswer.join(', ');
           }
@@ -215,13 +217,14 @@ const QuizResponsesTable = ({ quizId, onBack }) => {
         : 'asc'
     });
   };
-
+  // Sort responses based on sortConfig
   const sortedResponses = [...responses].sort((a, b) => {
     if (sortConfig.key === 'submittedAt') {
       return sortConfig.direction === 'asc'
         ? new Date(a.submittedAt).getTime() - new Date(b.submittedAt).getTime()
         : new Date(b.submittedAt).getTime() - new Date(a.submittedAt).getTime();
     }
+    // Sort by totalScore
     if (sortConfig.key === 'totalScore') {
       return sortConfig.direction === 'asc'
         ? (a.totalScore || 0) - (b.totalScore || 0)
@@ -229,7 +232,7 @@ const QuizResponsesTable = ({ quizId, onBack }) => {
     }
     return 0;
   });
-
+  // Loading state
   if (loading) {
     return (
       <div className="flex items-center justify-center h-64">
@@ -240,7 +243,7 @@ const QuizResponsesTable = ({ quizId, onBack }) => {
       </div>
     );
   }
-
+  // Error state
   if (error) {
     return (
       <Card className="bg-red-50 border-red-200">
@@ -250,7 +253,7 @@ const QuizResponsesTable = ({ quizId, onBack }) => {
       </Card>
     );
   }
-
+  // Main render
   return (
     <div className="space-y-6 p-6 max-w-7xl mx-auto">
       {/* Top Section: Back Button & Maybe a Title */}

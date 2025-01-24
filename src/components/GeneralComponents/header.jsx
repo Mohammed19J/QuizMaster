@@ -4,7 +4,7 @@ import Button from "./button";
 import LightSwitch from "./light_switch_header";
 import { useUser } from "../../context/UserContext";
 import { useNavigate } from "react-router-dom";
-
+// Header component that displays the title and navigation links
 const Header = ({ activeTab, onTabChange, className = "" }) => {
     const navItems = [
         { id: "dashboard", label: "Dashboard" },
@@ -16,8 +16,8 @@ const Header = ({ activeTab, onTabChange, className = "" }) => {
     const { logout } = useUser(); // Get the logout function from context
     const navigate = useNavigate(); // Navigate function from react-router
 
-    const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
-
+    const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);// State to manage mobile menu visibility
+    // Function to handle logout
     const handleLogout = () => {
         try {
             logout(); // Clear user data

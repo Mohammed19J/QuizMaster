@@ -1,5 +1,6 @@
 import { h } from "preact";
 
+// TextInput component
 const TextInput = ({
   label,
   placeholder,

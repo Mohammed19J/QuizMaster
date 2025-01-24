@@ -4,15 +4,17 @@ import { ref, get } from "firebase/database";
 import { database } from "../../firebase/firebase";
 import { useUser } from "../../context/UserContext";
 
+// QuizResponsesPage component
 const QuizResponsesPage = ({ onQuizSelect }) => {
+    // Get the current user from the UserContext
     const { user } = useUser();
     const [quizHistory, setQuizHistory] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
-
+    // Fetch the quiz history for the current user
     useEffect(() => {
         if (!user?.uid) return;
-
+        // Fetch the quiz history for the current user
         const fetchQuizHistory = async () => {
             try {
                 setLoading(true);
@@ -41,11 +43,13 @@ const QuizResponsesPage = ({ onQuizSelect }) => {
 
         fetchQuizHistory();
     }, [user?.uid]);
-
+    // Check if the user is logged in
     if (!user) return <p className="text-center">Please log in to view your quiz responses.</p>;
+    // Show a loading indicator while fetching the quiz responses
     if (loading) return <p className="text-gray-600 dark:text-gray-300 text-center">Loading quiz responses...</p>;
+    // Show an error message if fetching the quiz responses failed
     if (error) return <p className="text-red-500 text-center">{error}</p>;
-
+    // Render the quiz responses
     return (
         <div className="container mx-auto px-4 py-8">
             <h2 className="text-3xl font-bold mb-6 text-gray-800 dark:text-white text-center">

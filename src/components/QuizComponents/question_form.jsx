@@ -4,6 +4,7 @@ import TextInput from "./text_input";
 import SelectInput from "./select_input";
 import CheckboxInput from "./checkbox_input";
 
+// QuestionForm component
 const QuestionForm = ({
   questionId,
   questionNumber,
@@ -12,13 +13,14 @@ const QuestionForm = ({
   initialData = {},
   allQuestions = [],
 }) => {
-    
+    // The QuestionForm component is a form that allows the user to create a question for a quiz
+    // The form contains fields for the question text, question type, options, correct answers, grade, and conditional logic
   const [questionText, setQuestionText] = useState(initialData.questionText || "");
   const [questionType, setQuestionType] = useState(initialData.questionType || "text");
   const [isRequired, setIsRequired] = useState(initialData.isRequired || false);
   const [grade, setGrade] = useState(initialData.grade || 0);
   const [options, setOptions] = useState(initialData.options || []);
-  // Store correctAnswers as array of *option IDs*, consistent with your QuizCreator
+  // Store correctAnswers as array of option IDs, consistent with your QuizCreator
   const [correctAnswers, setCorrectAnswers] = useState(initialData.correctAnswers || []);
   const [textCorrectAnswer, setTextCorrectAnswer] = useState(
     initialData.textCorrectAnswer || ""
@@ -42,7 +44,7 @@ const QuestionForm = ({
       questionNumber,
     };
     onUpdate(updatedData);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, [
     questionText,
     questionType,
@@ -130,7 +132,7 @@ const QuestionForm = ({
       setCondition({});
     }
   }, [isConditional]);
-
+  // Log data when it changes
   useEffect(() => {
     console.log("QuestionForm received data:", {
       questionType,
@@ -139,7 +141,7 @@ const QuestionForm = ({
       initialData
     });
   }, [questionType, options, correctAnswers]);
-
+  // Return the form
   return (
     <div className="p-4 border rounded-md bg-gray-100 dark:bg-gray-700 shadow-md mb-4">
       <div className="flex justify-between items-center mb-4">

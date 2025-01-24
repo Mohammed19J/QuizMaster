@@ -1,5 +1,6 @@
 import * as React from "react";
 
+// Card component
 const Card = React.forwardRef(({ className, ...props }, ref) => (
   <div
     ref={ref}
@@ -8,7 +9,7 @@ const Card = React.forwardRef(({ className, ...props }, ref) => (
   />
 ));
 Card.displayName = "Card";
-
+// CardHeader component
 const CardHeader = React.forwardRef(({ className, ...props }, ref) => (
   <div
     ref={ref}
@@ -17,7 +18,7 @@ const CardHeader = React.forwardRef(({ className, ...props }, ref) => (
   />
 ));
 CardHeader.displayName = "CardHeader";
-
+// CardTitle component
 const CardTitle = React.forwardRef(({ className, ...props }, ref) => (
   <h3
     ref={ref}
@@ -26,7 +27,7 @@ const CardTitle = React.forwardRef(({ className, ...props }, ref) => (
   />
 ));
 CardTitle.displayName = "CardTitle";
-
+// CardContent component
 const CardContent = React.forwardRef(({ className, ...props }, ref) => (
   <div ref={ref} className={`p-6 pt-0 ${className}`} {...props} />
 ));

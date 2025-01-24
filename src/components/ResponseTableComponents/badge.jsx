@@ -1,5 +1,6 @@
 import * as React from "react";
 
+// Badge component
 const Badge = React.forwardRef(({ variant = "default", className, ...props }, ref) => {
   const variants = {
     default: "bg-primary text-primary-foreground hover:bg-primary/80",
@@ -7,7 +8,7 @@ const Badge = React.forwardRef(({ variant = "default", className, ...props }, re
     destructive: "bg-destructive text-destructive-foreground hover:bg-destructive/80",
     outline: "text-foreground border border-input bg-background hover:bg-accent hover:text-accent-foreground",
   };
-
+  // Return the badge component
   return (
     <div
       ref={ref}

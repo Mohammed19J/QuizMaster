@@ -4,17 +4,21 @@ import { ref, get } from "firebase/database";
 import { database } from "../../firebase/firebase";
 import { useUser } from "../../context/UserContext";
 import Chart from "chart.js/auto";
-
+//Display the total number of quizzes created by the user and the top 10 most popular quizzes
 const DashboardContent = () => {
+    //Get the current user from the UserContext
     const { user } = useUser();
+    //State variables to store the most submitted quizzes and the total number of quizzes created by the user
     const [mostSubmittedQuizzes, setMostSubmittedQuizzes] = useState({});
     const [totalQuizzes, setTotalQuizzes] = useState(0);
+    //State variable to store the chart instance
     const [chartInstance, setChartInstance] = useState(null);
+    //State variable to store the current theme
     const [isDark, setIsDark] = useState(
         document.documentElement.classList.contains("dark")
     );
 
-    // Fetch data on mount
+    // Fetch data on mount 
     useEffect(() => {
         const fetchMostSubmitted = async () => {
             try {
@@ -31,7 +35,7 @@ const DashboardContent = () => {
                 setMostSubmittedQuizzes({});
             }
         };
-
+        //Fetch the total number of quizzes created by the user
         const fetchTotalQuizzes = async () => {
             try {
                 const snapshot = await get(ref(database, `users/${user.uid}/quizzesCreated`));
@@ -49,7 +53,7 @@ const DashboardContent = () => {
         fetchMostSubmitted();
         fetchTotalQuizzes();
     }, [user?.uid]);
-
+    //Update the chart with the most submitted quizzes
     useEffect(() => {
         const handleThemeChange = () => {
             setIsDark(document.documentElement.classList.contains("dark"));
@@ -60,7 +64,7 @@ const DashboardContent = () => {
             window.removeEventListener("theme-changed", handleThemeChange);
         };
     }, []);
-
+    //Update the chart with the most submitted quizzes
     const updateChart = () => {
         if (!mostSubmittedQuizzes || Object.keys(mostSubmittedQuizzes).length === 0) {
             return;
@@ -80,7 +84,7 @@ const DashboardContent = () => {
             .getElementById("mostSubmittedChart")
             ?.getContext("2d");
         if (!ctx) return;
-
+        //Define the colors for the chart based on the current theme
         const themeColors = {
             light: {
                 backgroundColor: "rgba(59, 130, 246, 0.2)",
@@ -99,7 +103,7 @@ const DashboardContent = () => {
         };
 
         const colors = isDark ? themeColors.dark : themeColors.light;
-
+        //Define the chart configuration
         const chartConfig = {
             type: "bar",
             data: {
@@ -193,15 +197,15 @@ const DashboardContent = () => {
                 },
             },
         };
-
+        //Destroy the previous chart instance and create a new one
         if (chartInstance) {
             chartInstance.destroy();
         }
-
+        //Create a new chart instance
         const newChart = new Chart(ctx, chartConfig);
         setChartInstance(newChart);
     };
-
+    //Update the chart when the most submitted quizzes or the current theme changes
     useEffect(() => {
         updateChart();
 
@@ -217,7 +221,7 @@ const DashboardContent = () => {
     }, [mostSubmittedQuizzes, isDark]);
 
     return (
-        <Fragment>
+        <>
             <div className="container mx-auto px-4 py-8 space-y-8">
                 <div className="flex justify-center">
                     <div className="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-md text-center w-full max-w-sm">
@@ -247,7 +251,7 @@ const DashboardContent = () => {
                     </div>
                 </div>
             </div>
-        </Fragment>
+        </>
     );
 };
 

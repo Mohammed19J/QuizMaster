@@ -1,5 +1,6 @@
 import { h } from "preact";
 
+// SelectInput component 
 const SelectInput = ({ label, options, value, onChange, className = "" }) => {
     return (
         <div className={`mt-4 ${className}`}>

@@ -1,3 +1,4 @@
+// Desc: Button component that can be used to create buttons with different colors and styles
 const Button = ({ text, onClick, color, className = "" }) => {
     return (
         <button

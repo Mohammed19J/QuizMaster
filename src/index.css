@@ -2,13 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
+/*Light mode*/
 body {
   background-color: white;
   color: black;
   transition: background-color 0.3s, color 0.3s; /* Smooth transition */
 }
-
+/*Dark mode*/
 body.dark {
   background-color: black;
   color: white;
+  transition: background-color 0.3s, color 0.3s; /* Smooth transition */
 }

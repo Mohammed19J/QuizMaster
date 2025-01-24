@@ -6,8 +6,11 @@ import WelcomeMessage from "../GeneralComponents/WelcomeMessage";
 import LightSwitch from "../GeneralComponents/light_switch_header";
 import { CheckCircle, XCircle } from "lucide-react";
 
+// The QuizDisplay component is responsible for displaying the quiz to the participant
 const QuizDisplay = () => {
+  // The quizId is extracted from the URL
   const { quizId } = useParams();
+  // The state variables are initialized
   const [quiz, setQuiz] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -15,7 +18,7 @@ const QuizDisplay = () => {
   const [score, setScore] = useState(null);
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [questionFeedback, setQuestionFeedback] = useState({});
-
+  // The useEffect hook is used to fetch the quiz data from the database
   useEffect(() => {
     const fetchQuiz = async () => {
       try {
@@ -37,27 +40,34 @@ const QuizDisplay = () => {
 
     fetchQuiz();
   }, [quizId]);
-
+  // The handleAnswerChange function is used to update the user's responses
   const handleAnswerChange = (questionId, optionValue, isCheckbox) => {
+    // The setUserResponses function is used to update the user's responses
     setUserResponses((prev) => {
       const updated = { ...prev };
+      // If the question is a checkbox question, the user's response is updated accordingly
       if (isCheckbox) {
+        // If the user's response is an array, it is used as is, otherwise it is initialized as an empty array
         const currentAnswers = Array.isArray(prev[questionId]) ? prev[questionId] : [];
+        // If the user's response already includes the option value, it is removed
         if (currentAnswers.includes(optionValue)) {
           updated[questionId] = currentAnswers.filter((val) => val !== optionValue);
+          // Otherwise, the option value is added to the user's response
         } else {
           updated[questionId] = [...currentAnswers, optionValue];
         }
+        // If the question is not a checkbox question, the user's response is updated accordingly
       } else {
         updated[questionId] = optionValue;
       }
       return updated;
     });
   };
-
+  // The checkShouldShow function is used to determine if a question should be displayed
   const checkShouldShow = (question) => {
+    // If the question is not conditional, it should be displayed
     if (!question.isConditional) return true;
-    
+    // If the question is conditional, the condition is evaluated
     const conditionQuestionId = question.condition?.questionId;
     const expectedAnswer = question.condition?.answer;
     const userAnswer = userResponses[conditionQuestionId];
@@ -73,17 +83,21 @@ const QuizDisplay = () => {
     // For multiple choice or text questions (single answer)
     return userAnswer === expectedAnswer;
   };
-
+  // The evaluateAnswer function is used to evaluate the user's answer
   const evaluateAnswer = (question, userAnswer) => {
+    // If the question is a survey question, it is marked as correct
     if (question.grade === 0) {
       return { correct: true, score: 0, feedback: "This was a survey question." };
     }
-
+    // If the question is a checkbox question, the user's answer is evaluated
     if (question.questionType === "checkboxes" && Array.isArray(question.correctAnswers)) {
       const isCorrect =
         Array.isArray(userAnswer) &&
+        // Check if the user's response has the same length as the correct answers
         userAnswer.length === question.correctAnswers.length &&
+        // Check if all correct answers are included in the user's response
         userAnswer.every((ans) => question.correctAnswers.includes(ans));
+        // The result of the evaluation is returned
       return {
         correct: isCorrect,
         score: isCorrect ? question.grade : 0,
@@ -91,6 +105,7 @@ const QuizDisplay = () => {
           ? "Perfect! You selected all the correct answers."
           : `The correct answers were: ${question.correctAnswers.join(", ")}`,
       };
+      // If the question is a multiple choice question, the user's answer is evaluated
     } else if (question.questionType === "multiple_choice") {
       const isCorrect = question.correctAnswers?.includes(userAnswer);
       return {
@@ -100,6 +115,7 @@ const QuizDisplay = () => {
           ? "Correct! Well done."
           : `The correct answer was: ${question.correctAnswers[0]}`,
       };
+      // If the question is a text question, the user's answer is evaluated
     } else if (question.questionType === "text") {
       const isCorrect = question.textCorrectAnswer === userAnswer;
       return {
@@ -110,11 +126,12 @@ const QuizDisplay = () => {
           : `The correct answer was: ${question.textCorrectAnswer}`,
       };
     }
-
+    // If the question is of an unknown type, an error message is returned
     return { correct: false, score: 0, feedback: "Unable to evaluate answer." };
   };
-
+  // The handleSubmit function is used to submit the quiz
   const handleSubmit = async () => {
+    // The user's responses are checked to ensure that all required questions have been answered
     const unansweredRequired = quiz.questions.some(
       (question) =>
         checkShouldShow(question) &&
@@ -122,15 +139,15 @@ const QuizDisplay = () => {
         (!userResponses[question.id] ||
           (Array.isArray(userResponses[question.id]) && userResponses[question.id].length === 0))
     );
-
+    // If there are unanswered required questions, an alert is displayed and the function is exited
     if (unansweredRequired) {
       alert("Please answer all required questions before submitting.");
       return;
     }
-
+    // The total score and feedback for each question are initialized
     let totalScore = 0;
     const feedback = {};
-
+    // The user's responses are evaluated for each question
     quiz.questions.forEach((question) => {
       if (checkShouldShow(question)) {
         const userAnswer = userResponses[question.id];
@@ -139,13 +156,13 @@ const QuizDisplay = () => {
         feedback[question.id] = evaluation;
       }
     });
-
+    // The total score and feedback are updated
     setScore(totalScore);
     setQuestionFeedback(feedback);
     setIsSubmitted(true);
-
+    // The user's responses are saved in the database
     const totalPossibleScore = quiz.questions.reduce((acc, curr) => acc + (curr.grade || 0), 0);
-
+    // The response payload is initialized
     try {
       const responsePayload = {
         responses: userResponses,
@@ -193,7 +210,7 @@ const QuizDisplay = () => {
       console.error("Failed to save responses:", err);
     }
   };
-
+  // The getQuestionBackground function is used to determine the background color of a question
   const getQuestionBackground = (question) => {
     if (!isSubmitted || question.grade === 0) return "";
     const feedback = questionFeedback[question.id];
@@ -201,7 +218,7 @@ const QuizDisplay = () => {
       ? "bg-green-50 dark:bg-green-900/30"
       : "bg-red-50 dark:bg-red-900/30";
   };
-
+  // The loading state is checked and the appropriate component is rendered
   if (loading) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -209,7 +226,7 @@ const QuizDisplay = () => {
       </div>
     );
   }
-
+  // The error state is checked and the appropriate component is rendered
   if (error) {
     return (
       <div className="flex justify-center items-center min-h-screen">
@@ -219,12 +236,13 @@ const QuizDisplay = () => {
       </div>
     );
   }
-
+  // The quiz state is checked and the appropriate component is rendered
   const totalPossibleScore =
     quiz?.questions?.reduce((acc, curr) => acc + (curr.grade || 0), 0) || 0;
   const scorePercentage = totalPossibleScore > 0 ? (score / totalPossibleScore) * 100 : 0;
 
   return (
+    // The quiz is displayed to the participant
     <div className="w-full min-h-screen flex flex-col items-center bg-gradient-to-b from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800">      <div className="w-full max-w-3xl">
         <LightSwitch className="absolute top-4 right-8" />
         <div className="text-center mb-8 mt-12 md:mt-8">

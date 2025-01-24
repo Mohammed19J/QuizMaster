@@ -6,7 +6,9 @@ import { ref, update, get } from "firebase/database";
 import { database } from "../../firebase/firebase";
 import { useUser } from "../../context/UserContext";
 
+// QuizCreator component
 const QuizCreator = ({ initialQuiz = null, onClearSelection }) => {
+  // State variables
   const [questions, setQuestions] = useState([]);
   const [quizTitle, setQuizTitle] = useState("");
   const [showSuccessPopup, setShowSuccessPopup] = useState(false);
@@ -22,7 +24,7 @@ const QuizCreator = ({ initialQuiz = null, onClearSelection }) => {
       const mappedQuestions = (initialQuiz.questions || []).map(question => {
         console.log("Processing Question:", question);  // Debug log
         const mappedQuestion = { ...question };
-        
+        // For each question, convert correctAnswers to option IDs
         if (question.questionType === 'text') {
           mappedQuestion.textCorrectAnswer = question.correctAnswers?.[0] || '';
           mappedQuestion.correctAnswers = [];
@@ -35,11 +37,10 @@ const QuizCreator = ({ initialQuiz = null, onClearSelection }) => {
             })
             .map(option => option.id);
         }
-        
         console.log("Mapped Question:", mappedQuestion);  // Debug log
         return mappedQuestion;
       });
-  
+      // Set the processed questions and quiz title
       setQuestions(mappedQuestions);
       setQuizTitle(initialQuiz.title || "");
     } else {
@@ -84,11 +85,7 @@ const QuizCreator = ({ initialQuiz = null, onClearSelection }) => {
     );
   };
 
-  /**
-   * processQuestionsForSave:
-   *  - Convert each question’s in-memory correctAnswers (option IDs) into final form (option text or user input).
-   *  - The result is what actually gets stored in the DB.
-   */
+  // Process questions for saving to DB
   const processQuestionsForSave = (questions) => {
     return questions.map((question) => {
       const processedQuestion = { ...question };
@@ -112,18 +109,18 @@ const QuizCreator = ({ initialQuiz = null, onClearSelection }) => {
       return processedQuestion;
     });
   };
-
+  // Save quiz to DB
   const handleSaveQuiz = async () => {
     if (!user) {
       alert("Please log in to save your quiz.");
       return;
     }
-
+    // Basic validation
     if (!quizTitle.trim()) {
       alert("Quiz title is required!");
       return;
     }
-
+    // Ensure at least one question is added
     if (questions.length === 0) {
       alert("Please add at least one question to save the quiz!");
       return;
@@ -137,14 +134,14 @@ const QuizCreator = ({ initialQuiz = null, onClearSelection }) => {
         (q.questionType !== "text" && q.options.length === 0) ||
         (q.isConditional && (!q.condition.questionId || !q.condition.answer))
     );
-
+    // If any question is invalid, show alert and return
     if (invalidQuestions) {
       alert(
         "Some questions are incomplete. Please ensure every question has a question text, valid grade (≥ 0), and correct configurations."
       );
       return;
     }
-
+    // Save quiz to DB
     try {
       setIsLoading(true);
       const quizId = initialQuiz?.quizId || `quiz_${Date.now()}`;
@@ -181,7 +178,7 @@ const QuizCreator = ({ initialQuiz = null, onClearSelection }) => {
           : 0;
         await update(userStatsRef, { quizzesCreated: quizzesCreated + 1 });
       }
-
+      // Generate quiz link and show success popup
       const generatedLink = `${window.location.origin}/quiz/${quizId}`;
       setQuizLink(generatedLink);
       setShowSuccessPopup(true);
@@ -199,7 +196,7 @@ const QuizCreator = ({ initialQuiz = null, onClearSelection }) => {
       alert("Please log in to save your quiz.");
       return;
     }
-
+    // Basic validation
     try {
       setIsLoading(true);
       const newQuizId = `quiz_${Date.now()}`;
@@ -224,11 +221,11 @@ const QuizCreator = ({ initialQuiz = null, onClearSelection }) => {
         questions: processedQuestions,
         responses: 0,
       };
-
+      // Save to "quizzes/:quizId" and "users/:uid/quizHistory/:quizId"
       await update(quizRef, quizPayload);
       await update(userQuizRef, quizPayload);
       await update(userStatsRef, { quizzesCreated: quizzesCreated + 1 });
-
+      // Generate quiz link and show success popup
       const generatedLink = `${window.location.origin}/quiz/${newQuizId}`;
       setQuizLink(generatedLink);
       setShowSuccessPopup(true);
@@ -262,7 +259,7 @@ const QuizCreator = ({ initialQuiz = null, onClearSelection }) => {
       setQuizTitle("");
     }
   };
-
+  // Render the QuizCreator component
   return (
     <section className="flex flex-col items-center py-10 bg-gray-50 dark:bg-gray-900 rounded-lg shadow-lg">
       <h2 className="text-2xl font-bold text-gray-800 dark:text-gray-200 mb-6">
