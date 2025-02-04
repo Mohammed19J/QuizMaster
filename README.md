@@ -21,10 +21,6 @@ QuizMaster is a dynamic web application that enables users to create, share, and
 - ✅ **Export Quiz Results to Excel**
 - ✅ **Responsive UI for Mobile & Desktop**
 
-## 📷 Screenshots
-<!-- Add images showcasing your app -->
-![Dashboard Screenshot](https://your-image-url.com)
-
 ## 🏗️ Tech Stack
 - **Frontend:** Preact, TailwindCSS, React Router
 - **Backend:** Firebase Firestore (Real-time database), Firebase Authentication
