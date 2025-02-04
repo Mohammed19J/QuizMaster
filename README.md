@@ -7,6 +7,9 @@
 ## 🚀 Overview
 QuizMaster is a dynamic web application that enables users to create, share, and participate in interactive quizzes. Built with **Preact**, **Firebase**, and a modern UI framework, this platform offers a seamless experience for both quiz creators and participants.
 
+## 🚀 Test the app
+You can test the app here: https://quizmaster-amber.vercel.app/
+
 ## 🛠 Features
 - ✅ **Authentication with Google**
 - ✅ **Create & Manage Quizzes** (Multiple-choice, checkboxes, text input, conditional questions)
