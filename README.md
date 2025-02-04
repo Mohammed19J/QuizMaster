@@ -1,13 +1,8 @@
-Here's a comprehensive **README.md** file for your **QuizMaster** project that you can use for GitHub. It includes setup instructions, features, technologies used, and more.
-
----
-
 ### 📌 **README.md for QuizMaster**
 
 ```md
 # 📚 QuizMaster - Interactive Quiz Creation & Participation Platform
 
-![QuizMaster](https://your-image-url.com) <!-- Add a screenshot or logo if available -->
 
 ## 🚀 Overview
 QuizMaster is a dynamic web application that enables users to create, share, and participate in interactive quizzes. Built with **Preact**, **Firebase**, and a modern UI framework, this platform offers a seamless experience for both quiz creators and participants.
@@ -89,12 +84,6 @@ npm run dev
  ├── 📜 vite.config.js
 ```
 
-## 📝 To-Do List
-- [ ] Implement quiz timer feature ⏳
-- [ ] Add AI-powered question suggestions 🤖
-- [ ] Improve accessibility & UX 🔍
-- [ ] Add leaderboard functionality 🏆
-
 ## 🤝 Contributing
 Contributions are welcome! To contribute:
 1. Fork the repository
@@ -102,18 +91,3 @@ Contributions are welcome! To contribute:
 3. Make changes & commit (`git commit -m "Added new feature"`)
 4. Push to your branch (`git push origin feature-branch`)
 5. Open a pull request 🚀
-
-## 📜 License
-This project is licensed under the **MIT License**. See the [LICENSE](LICENSE) file for more details.
-
-## ✨ Credits
-Made with ❤️ by [Mohammed](https://github.com/your-github-profile)
-
----
-
-### 🔗 **Follow for Updates**
-⭐ Star the repository to keep up with future updates!
-
----
-
-Feel free to modify it with your actual GitHub URL and images. Let me know if you need any improvements! 🚀
